@@ -1,0 +1,14 @@
+{
+    "java.project.sourcePaths": ["src"],
+    "java.project.outputPath": "bin",
+    "java.project.referencedLibraries": {
+        "include": [
+            "lib/**/*.jar"
+        ],
+        "exclude": [
+            "lib/junit-jupiter-migration-support-5.0.0-M4-javadoc.jar"
+        ]
+    },
+    "java.debug.settings.onBuildFailureProceed": true,
+    "java.checkstyle.configuration": "${workspaceFolder}\\CS1332-checkstyle.xml"
+}
