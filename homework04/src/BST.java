@@ -1,23 +1,24 @@
 import java.util.Collection;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Your implementation of a BST.
  *
- * @author YOUR NAME HERE
+ * @author Akash Satya
  * @version 1.0
- * @userid YOUR USER ID HERE (i.e. gburdell3)
- * @GTID YOUR GT ID HERE (i.e. 900000000)
+ * @userid asatya8
+ * @GTID 903896933
  *
- * Collaborators: LIST ALL COLLABORATORS YOU WORKED WITH HERE
+ * Collaborators: N/A
  *
- * Resources: LIST ALL NON-COURSE RESOURCES YOU CONSULTED HERE
+ * Resources: N/A
  *  
  * By typing 'I agree' below, you are agreeing that this is your
  * own work and that you are responsible for all the contents of 
  * this file. If this is left blank, this homework will receive a zero.
  * 
- * Agree Here: REPLACE THIS TEXT
+ * Agree Here: I agree
  * 
  */
 public class BST<T extends Comparable<? super T>> {
@@ -56,7 +57,40 @@ public class BST<T extends Comparable<? super T>> {
      *                                            is null
      */
     public BST(Collection<T> data) {
+        if (data == null || data.contains(null)){
+            throw new IllegalArgumentException("Cannot add null data to the BST");
+        }
+        size = 0;
+        for (T element:data){
+            add(element);
+        }
+        
 
+    }
+    /**
+     * Adds value to BST
+     * 
+     * 
+     */
+    private void addHelper(T data, BSTNode<T> node){
+        if (data.compareTo(node.getData())>0){
+            if (node.getRight() == null){
+                node.setRight(new BSTNode<T>(data));
+                size++;
+            }
+            else{
+                addHelper(data, node.getRight());
+            }
+        }
+        else if (data.compareTo(node.getData())<0){
+            if (node.getLeft() == null){
+                node.setLeft(new BSTNode<T>(data));
+                size++;
+            }
+            else{
+                addHelper(data, node.getLeft());
+            }
+        }
     }
 
     /**
@@ -76,7 +110,16 @@ public class BST<T extends Comparable<? super T>> {
      * @throws java.lang.IllegalArgumentException if data is null
      */
     public void add(T data) {
-
+        if (data == null){
+            throw new IllegalArgumentException("Cannot add null data to the BST");
+        }
+        if (root == null){
+            root = new BSTNode<T>(data);
+            size++;
+        }
+        else{
+            addHelper(data, root);
+        }
     }
 
     /**
@@ -110,6 +153,30 @@ public class BST<T extends Comparable<? super T>> {
 
     }
 
+
+    /**
+     * Helper method for getting the data
+     * @param data
+     * @return data that is found
+     */
+    private T getHelper(T data, BSTNode<T> node){
+        if (node == null){
+            throw new NoSuchElementException("Data is not in the BST");
+        }
+        int diff = data.compareTo(node.getData());
+        if (data.equals(node.getData())){
+            return node.getData();
+            
+        }
+        else if (diff < 0){
+            getHelper(data, node.getLeft());
+        }
+        else if (diff > 0){
+           getHelper(data, node.getRight());
+        }
+        return null;
+    }
+
     /**
      * Returns the data from the tree matching the given parameter.
      *
@@ -128,7 +195,10 @@ public class BST<T extends Comparable<? super T>> {
      * @throws java.util.NoSuchElementException   if the data is not in the tree
      */
     public T get(T data) {
-
+        if (data == null){
+            throw new IllegalArgumentException("Cannot get null data from BST");
+        }
+        return getHelper(data, root);
     }
 
     /**
