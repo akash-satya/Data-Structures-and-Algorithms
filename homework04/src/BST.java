@@ -166,13 +166,12 @@ public class BST<T extends Comparable<? super T>> {
         int diff = data.compareTo(node.getData());
         if (data.equals(node.getData())){
             return node.getData();
-            
         }
         else if (diff < 0){
-            getHelper(data, node.getLeft());
+            return getHelper(data, node.getLeft());
         }
         else if (diff > 0){
-           getHelper(data, node.getRight());
+            return getHelper(data, node.getRight());
         }
         return null;
     }
@@ -217,7 +216,12 @@ public class BST<T extends Comparable<? super T>> {
      * @throws java.lang.IllegalArgumentException if data is null
      */
     public boolean contains(T data) {
-
+        try {
+            get(data);
+        } catch (NoSuchElementException a) {
+            return false;
+        }
+        return true;
     }
 
     /**
