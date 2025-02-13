@@ -1,6 +1,9 @@
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Queue;
 
 /**
  * Your implementation of a BST.
@@ -122,6 +125,16 @@ public class BST<T extends Comparable<? super T>> {
         }
     }
 
+
+
+    private T removeHelper(BSTNode<T> node, T data, BSTNode<T> dummy) {
+        if (node == null){
+            return null;
+        }
+        return null;
+    }
+
+
     /**
      * Removes and returns the data from the tree matching the given parameter.
      *
@@ -150,7 +163,12 @@ public class BST<T extends Comparable<? super T>> {
      * @throws java.util.NoSuchElementException   if the data is not in the tree
      */
     public T remove(T data) {
-
+        if (data == null){
+            throw new IllegalArgumentException("Cannot remove null data from BST");
+        }
+        BSTNode<T> temp = new BSTNode<>(null);
+        removeHelper(root, data, temp);
+        return temp.getData();
     }
 
 
@@ -225,6 +243,22 @@ public class BST<T extends Comparable<? super T>> {
     }
 
     /**
+     * Helps create pre-order traversal 
+     * @param data_List List which pre-order traversal will be added
+     * @return pre-order traversal list
+     */
+    private void preorderHelper(BSTNode<T> node , List<T> list){
+        if (node == null){
+            return;
+        }
+        else{
+            list.add(node.getData());
+            preorderHelper(node.getLeft(), list);
+            preorderHelper(node.getRight(), list);
+        }
+    }
+
+    /**
      * Generate a pre-order traversal of the tree.
      *
      * This must be done recursively.
@@ -234,7 +268,26 @@ public class BST<T extends Comparable<? super T>> {
      * @return the preorder traversal of the tree
      */
     public List<T> preorder() {
+        List<T> traversal = new ArrayList<>();
+        preorderHelper(root, traversal);
+        return traversal;
+    }
 
+
+    /**
+     * Helps create in-order traversal 
+     * @param data_List List which in-order traversal will be added
+     * @return in-order traversal list
+     */
+    private void inorderHelper(BSTNode<T> node , List<T> list){
+        if (node == null){
+            return;
+        }
+        else{
+            inorderHelper(node.getLeft(), list);
+            list.add(node.getData());
+            inorderHelper(node.getRight(), list);
+        }
     }
 
     /**
@@ -247,8 +300,29 @@ public class BST<T extends Comparable<? super T>> {
      * @return the inorder traversal of the tree
      */
     public List<T> inorder() {
-
+        List<T> traversal = new ArrayList<>();
+        inorderHelper(root, traversal);
+        return traversal;
     }
+
+
+
+    /**
+     * Helps create post-order traversal 
+     * @param data_List List which post-order traversal will be added
+     * @return post-order traversal list
+     */
+    private void postorderHelper(BSTNode<T> node , List<T> list){
+        if (node == null){
+            return;
+        }
+        else{
+            postorderHelper(node.getLeft(), list);
+            postorderHelper(node.getRight(), list);
+            list.add(node.getData());
+        }
+    }
+
 
     /**
      * Generate a post-order traversal of the tree.
@@ -260,7 +334,9 @@ public class BST<T extends Comparable<? super T>> {
      * @return the postorder traversal of the tree
      */
     public List<T> postorder() {
-
+        List<T> traversal = new ArrayList<>();
+        postorderHelper(root, traversal);
+        return traversal;
     }
 
     /**
@@ -277,7 +353,40 @@ public class BST<T extends Comparable<? super T>> {
      * @return the level order traversal of the tree
      */
     public List<T> levelorder() {
+        List<T> traversal = new ArrayList<>();
+        Queue<BSTNode<T>> queue = new LinkedList<>();
+        if (size == 0){
+            return traversal;
+        }
+        queue.add(root);
+        traversal.add(root.getData());
+        while (!(queue.isEmpty())) {
+            BSTNode <T> temp = queue.peek();
+            if (temp.getLeft() != null) {
+                queue.add(temp.getLeft());
+                traversal.add(temp.getLeft().getData());
+            }
+            if (temp.getRight() != null) {
+                queue.add(temp.getRight());
+                traversal.add(temp.getRight().getData());
+            }
+            queue.remove();
+        }
 
+        return traversal;
+
+    }
+    /**
+     *  helps find the height of the root
+     * @return height of the root of the tree
+     */
+    private int heightHelper(BSTNode<T> node) {
+        if (node == null){
+            return -1;
+        }
+        else{
+            return Math.max(heightHelper(node.getLeft()), heightHelper(node.getRight()))+1;
+        }
     }
 
     /**
@@ -293,7 +402,7 @@ public class BST<T extends Comparable<? super T>> {
      * @return the height of the root of the tree, -1 if the tree is empty
      */
     public int height() {
-
+        return heightHelper(root);
     }
 
     /**
@@ -304,7 +413,8 @@ public class BST<T extends Comparable<? super T>> {
      * Must be O(1).
      */
     public void clear() {
-
+        root = null;
+        size = 0;
     }
 
     /**

@@ -3,8 +3,11 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -21,7 +24,7 @@ import static org.junit.Assert.assertTrue;
  * work correctly and efficiently in all cases, which is why it's important
  * to write comprehensive tests to cover as many cases as possible.
  *
- * @author CS 1332 TAs
+ * @author CS 1332 TAs, David Gu
  * @version 1.0
  */
 public class BSTStudentTest {
@@ -43,12 +46,12 @@ public class BSTStudentTest {
     @Test(timeout = TIMEOUT)
     public void testConstructor() {
         /*
-              2
-             /
-            0
-             \
-              1
-        */
+         * 2
+         * /
+         * 0
+         * \
+         * 1
+         */
 
         List<Integer> data = new ArrayList<>();
         data.add(2);
@@ -61,16 +64,16 @@ public class BSTStudentTest {
         assertEquals((Integer) 2, tree.getRoot().getData());
         assertEquals((Integer) 0, tree.getRoot().getLeft().getData());
         assertEquals((Integer) 1, tree.getRoot().getLeft().getRight()
-                     .getData());
+                .getData());
     }
 
     @Test(timeout = TIMEOUT)
     public void testAdd() {
         /*
-              1
-             / \
-            0   2
-        */
+         * 1
+         * / \
+         * 0 2
+         */
 
         tree.add(1);
         tree.add(0);
@@ -81,6 +84,17 @@ public class BSTStudentTest {
         assertEquals((Integer) 1, tree.getRoot().getData());
         assertEquals((Integer) 0, tree.getRoot().getLeft().getData());
         assertEquals((Integer) 2, tree.getRoot().getRight().getData());
+
+        // Check repeats
+        tree.add(2);
+        assertEquals(3, tree.size());
+
+        // Check exception throwing
+        try {
+            tree.add(null);
+        } catch (IllegalArgumentException e) {
+            assertEquals(3, tree.size());
+        }
     }
 
     @Test(timeout = TIMEOUT)
@@ -88,22 +102,22 @@ public class BSTStudentTest {
         Integer temp = 2;
 
         /*
-              1
-             / \
-            0   2
-                 \
-                  3
-                   \
-                    4
-
-            ->
-
-              1
-             / \
-            0   3
-                 \
-                  4
-        */
+         * 1
+         * / \
+         * 0 2
+         * \
+         * 3
+         * \
+         * 4
+         *
+         * ->
+         *
+         * 1
+         * / \
+         * 0 3
+         * \
+         * 4
+         */
 
         tree.add(1);
         tree.add(0);
@@ -120,28 +134,28 @@ public class BSTStudentTest {
         assertEquals((Integer) 0, tree.getRoot().getLeft().getData());
         assertEquals((Integer) 3, tree.getRoot().getRight().getData());
         assertEquals((Integer) 4, tree.getRoot().getRight()
-                     .getRight().getData());
+                .getRight().getData());
 
         temp = 1;
         tree = new BST<>();
 
         /*
-              1
-             / \
-            0   2
-                 \
-                  3
-                   \
-                    4
-
-            ->
-
-              2
-             / \
-            0   3
-                 \
-                  4
-        */
+         * 1
+         * / \
+         * 0 2
+         * \
+         * 3
+         * \
+         * 4
+         *
+         * ->
+         *
+         * 2
+         * / \
+         * 0 3
+         * \
+         * 4
+         */
 
         tree.add(temp);
         tree.add(0);
@@ -158,7 +172,82 @@ public class BSTStudentTest {
         assertEquals((Integer) 0, tree.getRoot().getLeft().getData());
         assertEquals((Integer) 3, tree.getRoot().getRight().getData());
         assertEquals((Integer) 4, tree.getRoot().getRight()
-                     .getRight().getData());
+                .getRight().getData());
+
+        tree = new BST<>();
+        Integer firstRoot = 2;
+        tree.add(firstRoot);
+        tree.add(1);
+        tree.add(4);
+        tree.add(3);
+        tree.add(5);
+
+        // Test remove root
+        tree.remove(2);
+        assertNotSame(firstRoot, tree.getRoot().getData());
+        assertEquals(4, tree.size());
+
+        // Test exception
+        try {
+            tree.remove(null);
+        } catch (IllegalArgumentException e) {
+            assertEquals(4, tree.size());
+        }
+        try {
+            tree.remove(0);
+        } catch (NoSuchElementException e) {
+            assertEquals(4, tree.size());
+        }
+        try {
+            tree.remove(2);
+        } catch (NoSuchElementException e) {
+            assertEquals(4, tree.size());
+        }
+        try {
+            tree.remove(10);
+        } catch (NoSuchElementException e) {
+            assertEquals(4, tree.size());
+        }
+
+        // Test remove all
+        tree.remove(1);
+        tree.remove(3);
+        tree.remove(4);
+        tree.remove(5);
+        assertEquals(0, tree.size());
+
+        // Test remove subchild
+        tree.add(2);
+        tree.add(1);
+        tree.add(8);
+        tree.add(4);
+        tree.add(3);
+        tree.add(5);
+        tree.add(7);
+        tree.add(9);
+        tree.add(6);
+        tree.add(10);
+
+        tree.remove(8);
+        assertEquals(9, tree.size());
+        tree.remove(6);
+        assertEquals(8, tree.size());
+        tree.remove(4);
+        assertEquals(7, tree.size());
+        tree.remove(2);
+        assertEquals(6, tree.size());
+        tree.remove(3);
+        assertEquals(5, tree.size());
+        tree.remove(5);
+        assertEquals(4, tree.size());
+        tree.remove(7);
+        assertEquals(3, tree.size());
+        tree.remove(9);
+        assertEquals(2, tree.size());
+        tree.remove(10);
+        assertEquals(1, tree.size());
+        tree.remove(1);
+        assertEquals(0, tree.size());
     }
 
     @Test(timeout = TIMEOUT)
@@ -172,14 +261,14 @@ public class BSTStudentTest {
         Integer temp210 = 210;
 
         /*
-                  200
-              /        \
-            185         215
-             \         /
-              190     205
-               \       \
-                195     210
-        */
+         * 200
+         * / \
+         * 185 215
+         * \ /
+         * 190 205
+         * \ \
+         * 195 210
+         */
 
         tree.add(temp200);
         tree.add(temp185);
@@ -200,19 +289,32 @@ public class BSTStudentTest {
         assertSame(temp205, tree.get(205));
         assertSame(temp210, tree.get(210));
         assertSame(temp215, tree.get(215));
+
+        // Check exception throwing
+        try {
+            tree.get(null);
+        } catch (IllegalArgumentException e) {
+            assertEquals(7, tree.size());
+        }
+
+        try {
+            tree.get(186);
+        } catch (NoSuchElementException e) {
+            assertEquals(7, tree.size());
+        }
     }
 
     @Test(timeout = TIMEOUT)
     public void testContains() {
         /*
-                3
-             /     \
-            0       6
-             \     /
-              1   4
-               \   \
-                2   5
-        */
+         * 3
+         * / \
+         * 0 6
+         * \ /
+         * 1 4
+         * \ \
+         * 2 5
+         */
 
         tree.add(3);
         tree.add(0);
@@ -230,36 +332,48 @@ public class BSTStudentTest {
         assertTrue(tree.contains(4));
         assertTrue(tree.contains(5));
         assertTrue(tree.contains(6));
+        assertFalse(tree.contains(8));
+        assertFalse(tree.contains(-1));
+
+        // Check exception throwing
+        try {
+            tree.contains(null);
+        } catch (IllegalArgumentException e) {
+            assertEquals(7, tree.size());
+        }
     }
 
     @Test(timeout = TIMEOUT)
     public void testPreorder() {
         /*
-                3
-             /     \
-            0       8
-             \     /
-              1   4
-               \   \
-                2   6
-                   / \
-                  5   7
-        */
+         * 3
+         * / \
+         * 0 8
+         * / \ / \
+         * -1 1 4 9
+         * \ \
+         * 2 6
+         * / \
+         * 5 7
+         */
 
         tree.add(3);
         tree.add(0);
+        tree.add(-1);
         tree.add(1);
         tree.add(2);
         tree.add(8);
+        tree.add(9);
         tree.add(4);
         tree.add(6);
         tree.add(5);
         tree.add(7);
-        assertEquals(9, tree.size());
+        assertEquals(11, tree.size());
 
         List<Integer> preorder = new ArrayList<>();
         preorder.add(3);
         preorder.add(0);
+        preorder.add(-1);
         preorder.add(1);
         preorder.add(2);
         preorder.add(8);
@@ -267,37 +381,45 @@ public class BSTStudentTest {
         preorder.add(6);
         preorder.add(5);
         preorder.add(7);
+        preorder.add(9);
 
-        // Should be [3, 0, 1, 2, 8, 4, 6, 5, 7]
+        // Should be [3, 0, -1, 1, 2, 8, 4, 6, 5, 7, 9]
+        assertEquals(preorder, tree.preorder());
+
+        tree = new BST<>();
+        preorder = new ArrayList<>();
         assertEquals(preorder, tree.preorder());
     }
 
     @Test(timeout = TIMEOUT)
     public void testInorder() {
         /*
-                3
-             /     \
-            0       8
-             \     /
-              1   4
-               \   \
-                2   6
-                   / \
-                  5   7
-        */
+         * 3
+         * / \
+         * 0 8
+         * / \ / \
+         * -1 1 4 9
+         * \ \
+         * 2 6
+         * / \
+         * 5 7
+         */
 
         tree.add(3);
         tree.add(0);
+        tree.add(-1);
         tree.add(1);
         tree.add(2);
         tree.add(8);
+        tree.add(9);
         tree.add(4);
         tree.add(6);
         tree.add(5);
         tree.add(7);
-        assertEquals(9, tree.size());
+        assertEquals(11, tree.size());
 
         List<Integer> inorder = new ArrayList<>();
+        inorder.add(-1);
         inorder.add(0);
         inorder.add(1);
         inorder.add(2);
@@ -307,37 +429,45 @@ public class BSTStudentTest {
         inorder.add(6);
         inorder.add(7);
         inorder.add(8);
+        inorder.add(9);
 
-        // Should be [0, 1, 2, 3, 4, 5, 6, 7, 8]
+        // Should be [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        assertEquals(inorder, tree.inorder());
+
+        tree = new BST<>();
+        inorder = new ArrayList<>();
         assertEquals(inorder, tree.inorder());
     }
 
     @Test(timeout = TIMEOUT)
     public void testPostorder() {
         /*
-                3
-             /     \
-            0       8
-             \     /
-              1   4
-               \   \
-                2   6
-                   / \
-                  5   7
-        */
+         * 3
+         * / \
+         * 0 8
+         * / \ / \
+         * -1 1 4 9
+         * \ \
+         * 2 6
+         * / \
+         * 5 7
+         */
 
         tree.add(3);
         tree.add(0);
+        tree.add(-1);
         tree.add(1);
         tree.add(2);
         tree.add(8);
+        tree.add(9);
         tree.add(4);
         tree.add(6);
         tree.add(5);
         tree.add(7);
-        assertEquals(9, tree.size());
+        assertEquals(11, tree.size());
 
         List<Integer> postorder = new ArrayList<>();
+        postorder.add(-1);
         postorder.add(2);
         postorder.add(1);
         postorder.add(0);
@@ -345,62 +475,75 @@ public class BSTStudentTest {
         postorder.add(7);
         postorder.add(6);
         postorder.add(4);
+        postorder.add(9);
         postorder.add(8);
         postorder.add(3);
 
-        // Should be [2, 1, 0, 5, 7, 6, 4, 8, 3]
+        // Should be [-1, 2, 1, 0, 5, 7, 6, 4, 9, 8, 3]
+        assertEquals(postorder, tree.postorder());
+
+        tree = new BST<>();
+        postorder = new ArrayList<>();
         assertEquals(postorder, tree.postorder());
     }
 
     @Test(timeout = TIMEOUT)
     public void testLevelorder() {
         /*
-                3
-             /     \
-            0       8
-             \     /
-              1   4
-               \   \
-                2   6
-                   / \
-                  5   7
-        */
+         * 3
+         * / \
+         * 0 8
+         * / \ / \
+         * -1 1 4 9
+         * \ \
+         * 2 6
+         * / \
+         * 5 7
+         */
 
         tree.add(3);
         tree.add(0);
+        tree.add(-1);
         tree.add(1);
         tree.add(2);
         tree.add(8);
+        tree.add(9);
         tree.add(4);
         tree.add(6);
         tree.add(5);
         tree.add(7);
-        assertEquals(9, tree.size());
+        assertEquals(11, tree.size());
 
         List<Integer> levelorder = new ArrayList<>();
         levelorder.add(3);
         levelorder.add(0);
         levelorder.add(8);
+        levelorder.add(-1);
         levelorder.add(1);
         levelorder.add(4);
+        levelorder.add(9);
         levelorder.add(2);
         levelorder.add(6);
         levelorder.add(5);
         levelorder.add(7);
 
-        // Should be [3, 0, 8, 1, 4, 2, 6, 5, 7]
+        // Should be [3, 0, 8, -1, 1, 4, 9, 2, 6, 5, 7]
+        assertEquals(levelorder, tree.levelorder());
+
+        tree = new BST<>();
+        levelorder = new ArrayList<>();
         assertEquals(levelorder, tree.levelorder());
     }
 
     @Test(timeout = TIMEOUT)
     public void testHeight() {
         /*
-              2
-             /
-            0
-             \
-              1
-        */
+         * 2
+         * /
+         * 0
+         * \
+         * 1
+         */
 
         tree.add(2);
         tree.add(0);
@@ -408,17 +551,49 @@ public class BSTStudentTest {
         assertEquals(3, tree.size());
 
         assertEquals(2, tree.height());
+
+        tree = new BST<>();
+        assertEquals(-1, tree.height());
+        assertEquals(0, tree.size());
+
+        tree.add(10);
+        assertEquals(0, tree.height());
+        assertEquals(1, tree.size());
+
+        tree.add(5);
+        assertEquals(1, tree.height());
+        assertEquals(2, tree.size());
+
+        tree.add(15);
+        assertEquals(1, tree.height());
+        assertEquals(3, tree.size());
+
+        tree.add(3);
+        assertEquals(2, tree.height());
+        assertEquals(4, tree.size());
+
+        tree.add(7);
+        assertEquals(2, tree.height());
+        assertEquals(5, tree.size());
+
+        tree.add(13);
+        assertEquals(2, tree.height());
+        assertEquals(6, tree.size());
+
+        tree.add(14);
+        assertEquals(3, tree.height());
+        assertEquals(7, tree.size());
     }
 
     @Test(timeout = TIMEOUT)
     public void testClear() {
         /*
-              2
-             /
-            0
-             \
-              1
-        */
+         * 2
+         * /
+         * 0
+         * \
+         * 1
+         */
 
         tree.add(2);
         tree.add(0);
@@ -433,16 +608,16 @@ public class BSTStudentTest {
     @Test(timeout = TIMEOUT)
     public void testKLargest() {
         /*
-                    50
-                  /    \
-                25      75
-               /  \
-              12   37
-             /  \    \
-            10  15    40
-               /
-              13
-        */
+         * 50
+         * / \
+         * 25 75
+         * / \
+         * 12 37
+         * / \ \
+         * 10 15 40
+         * /
+         * 13
+         */
 
         tree.add(50);
         tree.add(25);
@@ -463,5 +638,18 @@ public class BSTStudentTest {
 
         // Should be [37, 40, 50, 75]
         assertEquals(expected, tree.kLargest(4));
+
+        // Check exception throwing
+        try {
+            tree.kLargest(10);
+        } catch (IllegalArgumentException e) {
+            assertEquals(9, tree.size());
+        }
+
+        try {
+            tree.kLargest(-1);
+        } catch (IllegalArgumentException e) {
+            assertEquals(9, tree.size());
+        }
     }
 }
