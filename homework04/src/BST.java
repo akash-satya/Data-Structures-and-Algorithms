@@ -236,7 +236,7 @@ public class BST<T extends Comparable<? super T>> {
     public boolean contains(T data) {
         try {
             get(data);
-        } catch (NoSuchElementException a) {
+        } catch (NoSuchElementException noSuchElementException) {
             return false;
         }
         return true;
