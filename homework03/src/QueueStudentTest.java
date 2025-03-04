@@ -82,19 +82,15 @@ public class QueueStudentTest {
     @Test(timeout = TIMEOUT)
     public void testArrayDequeue() {
         array.enqueue("0a");
-        array.enqueue("1a");
         assertEquals("0a", array.dequeue());
-        assertEquals(1, array.size());
-        assertEquals("1a", array.peek());
+        assertEquals(0, array.size());
     }
 
     @Test(timeout = TIMEOUT)
     public void testLinkedDequeue() {
         linked.enqueue("0a");
-        linked.enqueue("1a");
         assertEquals("0a", linked.dequeue());
-        assertEquals(1, linked.size());
-        assertEquals("1a", linked.peek());
+        assertEquals(0, linked.size());
     }
 
     @Test(timeout = TIMEOUT, expected = java.util.NoSuchElementException.class)

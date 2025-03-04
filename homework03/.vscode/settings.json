@@ -1,8 +1,16 @@
 {
     "java.project.sourcePaths": ["src"],
     "java.project.outputPath": "bin",
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar"
-    ],
+    "java.project.referencedLibraries": {
+        "include": [
+            "lib/**/*.jar",
+            "c:\\Users\\akash\\Downloads\\junit-4.12.jar",
+            "c:\\Users\\akash\\Downloads\\hamcrest-core-1.3.jar"
+        ],
+        "exclude": [
+            "lib/hamcrest-core-1.3.jar",
+            "lib/junit-4.12.jar"
+        ]
+    },
     "java.checkstyle.configuration": "${workspaceFolder}\\CS1332-checkstyle.xml"
 }
