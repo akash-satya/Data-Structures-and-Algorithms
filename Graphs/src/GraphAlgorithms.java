@@ -1,20 +1,26 @@
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
-import java.util.List;
-import java.util.HashSet;
-import java.util.Queue;
-import java.util.LinkedList;
-import java.util.PriorityQueue;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Set;
 
 /**
  * Your implementation of various different graph algorithms.
  *
- * @author Aditya Simhadri
- * @userid asimhadri3
- * @GTID 903898316
+ * @author Akash Satya
+ * @userid asatya8
+ * @GTID 903896933
  * @version 1.0
+ * 
+ * By typing 'I agree' below, you are agreeing that this is your
+ * own work and that you are responsible for all the contents of 
+ * this file. If this is left blank, this homework will receive a zero.
+ * 
+ * Agree Here: I agree
  */
 public class GraphAlgorithms {
 
@@ -44,36 +50,35 @@ public class GraphAlgorithms {
      *                                  doesn't exist in the graph
      */
     public static <T> List<Vertex<T>> bfs(Vertex<T> start, Graph<T> graph) {
-
         if (start == null) {
-            throw new IllegalArgumentException("the start vertex cannot be null");
+            throw new IllegalArgumentException("The start vertex cannot be null");
         }
         if (graph == null) {
-            throw new IllegalArgumentException("the graph cannot be null");
+            throw new IllegalArgumentException("The graph cannot be null");
         }
         if (!graph.getVertices().contains(start)) {
-            throw new IllegalArgumentException("the start vertex is not in the graph");
+            throw new IllegalArgumentException("The start vertex is not in the graph");
         }
 
-        Set<Vertex<T>> visitedSet = new HashSet<>();
+        Set<Vertex<T>> visited = new HashSet<>();
         Queue<Vertex<T>> queue = new LinkedList<>();
-        List<Vertex<T>> traversalList = new ArrayList<>();
+        List<Vertex<T>> traversal = new ArrayList<>();
 
         queue.add(start);
-        visitedSet.add(start);
+        visited.add(start);
 
         while (!queue.isEmpty()) {
             Vertex<T> v = queue.remove();
-            traversalList.add(v);
+            traversal.add(v);
 
             for (VertexDistance<T> vertex: graph.getAdjList().get(v)) {
-                if (!visitedSet.contains(vertex.getVertex())) {
-                    visitedSet.add(vertex.getVertex());
+                if (!visited.contains(vertex.getVertex())) {
+                    visited.add(vertex.getVertex());
                     queue.add(vertex.getVertex());
                 }
             }
         }
-        return traversalList;
+        return traversal;
     }
 
     /**
@@ -115,30 +120,30 @@ public class GraphAlgorithms {
             throw new IllegalArgumentException("the start vertex is not in the graph");
         }
 
-        Set<Vertex<T>> visitedSet = new HashSet<>();
-        List<Vertex<T>> traversalList = new ArrayList<>();
-        dfsHelper(start, visitedSet, traversalList, graph);
+        Set<Vertex<T>> visited = new HashSet<>();
+        List<Vertex<T>> traversal = new ArrayList<>();
+        dfsHelper(start, visited, traversal, graph);
 
-        return traversalList;
+        return traversal;
     }
 
     /**
-     * helper method for the depth-first search algorithm.
+     * Helper method for the depth-first search algorithm and processing. 
      * @param start the start vertex
-     * @param visitedSet set with the elements that are visited
-     * @param traversalList the list of elements in the order they are traversed
+     * @param visited set with the elements that are visited
+     * @param traversal the list of elements in the order they are traversed
      * @param graph the graph of vertices
      * @param <T> the type of elements
      */
 
-    private static <T> void dfsHelper(Vertex<T> start, Set<Vertex<T>> visitedSet, List<Vertex<T>> traversalList,
+    private static <T> void dfsHelper(Vertex<T> start, Set<Vertex<T>> visited, List<Vertex<T>> traversal,
                                      Graph<T> graph) {
-        visitedSet.add(start);
-        traversalList.add(start);
+        visited.add(start);
+        traversal.add(start);
 
         for (VertexDistance<T> vertex: graph.getAdjList().get(start)) {
-            if (!visitedSet.contains(vertex.getVertex())) {
-                dfsHelper(vertex.getVertex(), visitedSet, traversalList, graph);
+            if (!visited.contains(vertex.getVertex())) {
+                dfsHelper(vertex.getVertex(), visited, traversal, graph);
             }
         }
     }
@@ -253,7 +258,6 @@ public class GraphAlgorithms {
      *                                  doesn't exist in the graph.
      */
     public static <T> Set<Edge<T>> prims(Vertex<T> start, Graph<T> graph) {
-
         if (start == null) {
             throw new IllegalArgumentException("the start vertex cannot be null");
         }
@@ -309,4 +313,5 @@ public class GraphAlgorithms {
 
         return edges;
     }
+
 }
